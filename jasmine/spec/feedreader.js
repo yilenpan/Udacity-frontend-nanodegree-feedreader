@@ -35,6 +35,7 @@ $(function() {
             var len = allFeeds.length;
             for (var i = 0; i < len; i++){
                 expect(allFeeds[i].url).toBeDefined();
+                expect(allFeeds[i].url).not.toBe('');
             }
         });
 
@@ -46,7 +47,7 @@ $(function() {
             var len = allFeeds.length;
             for (var i = 0; i < len; i++){
                 expect(allFeeds[i].name).toBeDefined();
-                expect(allFeeds[i].name).not.toBe('');
+                expect(allFeeds[i].name.length).not.toBe(0);
             }
         });
     });
@@ -60,8 +61,7 @@ $(function() {
          * hiding/showing of the menu element.
          */
         it("should be hidden by default", function() {
-            var menu = $('body').attr('class');
-            expect(menu).toBe('menu-hidden');
+            expect($('body').hasClass('menu-hidden')).toBeTruthy();
         });
 
          /* TODO: Write a test that ensures the menu changes
@@ -70,14 +70,11 @@ $(function() {
           * clicked and does it hide when clicked again.
           */
         it("should reveal itself when clicked", function() {
-            var menu = $('body').attr('class');
-            expect(menu).toBe('menu-hidden');
-            $(".icon-list").trigger('click');
-            menu = $('body').attr('class');
-            expect(menu).toBe('');
-            $(".icon-list").trigger('click');
-            menu = $('body').attr('class');
-            expect(menu).toBe('menu-hidden');
+            expect($('body').hasClass('menu-hidden')).toBeTruthy();
+            $('.menu-icon-link').click();
+            expect($('body').hasClass('menu-hidden')).not.toBeTruthy();
+            $('.menu-icon-link').click();
+            expect($('body').hasClass('menu-hidden')).toBeTruthy();
         });
     });
 
@@ -91,13 +88,14 @@ $(function() {
          * the use of Jasmine's beforeEach and asynchronous done() function.
          */
         beforeEach(function(done) {
+            $(".feed").empty
             loadFeed(1, function() {
                 done();
             });
         });
 
         it("should load > 1 .entry element in feed container after loadFeed()", function() {
-            var entries = $('.feed').find('[class=entry]');
+            var entries = $('.feed').find('.entry');
             var entryLen = entries.length;
             expect(entryLen).toBeGreaterThan(0);
         });
@@ -113,6 +111,7 @@ $(function() {
         beforeEach(function(done) {
             first = $('.feed').html();
             loadFeed(2, function() {
+                done();
             });
         });
 
